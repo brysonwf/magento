@@ -92,11 +92,17 @@ class Clarion_Storelocator_Block_Adminhtml_Storelocator_Grid extends Mage_Adminh
             'sortable'=>true,
             'index'=>'city'
         ));
-        
+
         $this->addColumn('zipcode', array(
             'header'=>Mage::helper('clarion_storelocator')->__('Zipcode'),
             'sortable'=>true,
             'index'=>'zipcode'
+        ));
+
+        $this->addColumn('type', array(
+            'header'=>Mage::helper('clarion_storelocator')->__('Type'),
+            'sortable'=>true,
+            'index'=>'type'
         ));
         
         /**
