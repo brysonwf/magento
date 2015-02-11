@@ -1,0 +1,223 @@
+<div class="storelocator">
+<?php
+/**
+ * Storelocator template for stores list
+ *
+ * @author Magento
+ */
+
+/**
+ * @var $this Clarion_Storelocator_Block_List
+ * @see Clarion_Storelocator_Block_List
+ */
+?>
+<?php
+$markers = array();
+?>
+<?php
+$_StoreCollection = $this->getStoreCollection();
+$i = 1;
+$totalStoreCount = $_StoreCollection->count();
+$fulladdress = '';
+?>
+<script>
+    //<![CDATA[
+        var googleMapDivId = 'store-list-map-canvas';
+    //]]>
+</script>
+<div class="page-title page-header clearfix">
+    <h1 class="pull-left"><?php echo Mage::helper('clarion_storelocator')->__('Find a Dealer') ?></h1>
+    <div id="show-all-store" class="pull-right">
+        <button
+            onclick="place_multiple_markers(markers, googleMapDivId);"
+            class="button btn btn-primary"
+            title="<?php echo Mage::helper('clarion_storelocator')->__('Show All Stores') ?>"
+            type="button">
+            <?php echo Mage::helper('clarion_storelocator')->__('Show All Stores') ?>
+        </button>
+    </div>
+</div>
+    <div border="0" id="search-store">
+        <form action="<?php echo $this->getPostActionUrl() ?>" method="get" id="addressSearch" class="form-horizontal">
+            <div class="row">
+                <?php $_countries = $this->getCountries();?>
+                <?php if (count($_countries) > 0): ?>
+                    <div class="col-sm-4">
+                        <div class="form-group ">
+                            <label for="country" class=" col-lg-2 col-sm-4 control-label"><?php echo $this->__('Country') ?></label>
+                            <div class="input-box col-lg-10 col-sm-8">
+                                <select name="country" id="country" class="select form-control" title="<?php echo $this->__('Country') ?>">
+                                    <option value=""><?php echo $this->__('-- Please Select --'); ?></option>
+                                    <?php foreach($_countries as $_country): ?>
+                                        <option value="<?php echo $_country['value'] ?>"
+                                                <?php if($this->getFormData()->getCountry() == $_country['value']):?>selected="selected"<?php endif;?>>
+                                            <?php echo $_country['label'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label for="state" class="col-lg-2 col-sm-4 control-label" ><?php echo $this->__('State') ?></label>
+                        <div class="input-box col-lg-10 col-sm-8">
+                            <?php $currentState =  $this->escapeHtml($this->getFormData()->getState()); ?>
+                            <?php $state_list = Mage::helper('clarion_storelocator')->getStateList(); ?>
+                            <select name="state" id="state" class="form-control">
+                                <option value="">-- Please Select --</option>
+                                <?php foreach ($state_list as $abv=>$state){ ?>
+                                    <option <?php if($currentState == $state) echo 'selected'; ?> value="<?php echo $state; ?>"><?php echo $state; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label for="city" class="col-lg-2 col-sm-4 control-label"  ><?php echo $this->__('City') ?></label>
+                        <div class="input-box col-lg-10 col-sm-8">
+                            <input type="text" name="city" id="city" value="<?php echo $this->escapeHtml($this->getFormData()->getCity()) ?>" title="<?php echo $this->__('City') ?>" class="input-text form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 text-right">
+                    <button type="submit" title="<?php echo $this->__('Search') ?>" class="button btn btn-primary"><span><span><i class="fa fa-search"></i><span class="sr-only"><?php echo $this->__('Search') ?></span></span></span></button>
+                    <button type="reset" title="<?php echo $this->__('Reset') ?>" class="button btn btn-default" onClick="setLocation('<?php echo Mage::getUrl('*/*/index') ?>')"><span><span><i class="fa fa-refresh"></i><span class="sr-only"><?php echo $this->__('Reset') ?></span></span></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+<?php if($totalStoreCount): ?>
+    <div id="stores-list-gmap-div">
+        <div id="store-list-map-canvas">&nbsp;</div>
+    </div>
+<?php endif; ?>
+<div id="stores-list-div">
+<div border="0" id="stores">
+    <?php if(!$totalStoreCount): ?>
+    <p class="note-msg"><?php echo $this->__('There are no stores.') ?></p>
+    <?php else: ?>
+        <div class="row">
+            <?php foreach ($_StoreCollection as $store): ?>
+                <div class="col-sm-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="<?php echo $this->getStoreUrl($store);?>"><?php echo $this->escapeHtml(ucfirst($store->getName())) ?></a></h4>
+                        </div>
+                        <div class="panel-body">
+                            <?php $fulladdress = ''; ?>
+                            <!-- Store Address -->
+                            <?php if($store->getStreetAddress()): ?>
+                                <?php $fulladdress .= $this->escapeHtml($store->getStreetAddress()).'<br>'; ?>
+                            <?php endif; ?>
+                            <!-- City -->
+                            <?php if($store->getCity()): ?>
+                                <?php $fulladdress .= $this->escapeHtml(ucfirst($store->getCity())).', '; ?>
+                            <?php endif; ?>
+                            <!-- State -->
+                            <?php if($store->getState()): ?>
+                                <?php $fulladdress .= $this->escapeHtml(ucfirst($store->getState())).'<br>'; ?>
+                            <?php endif; ?>
+                            <!-- country -->
+                            <?php if($store->getCountry()): ?>
+                                <?php $fulladdress .= ucfirst($this->getCountryName($store->getCountry())); ?>
+                            <?php endif; ?>
+                            <!-- Zip Code -->
+                            <?php if($store->getZipcode()): ?>
+                                <?php $fulladdress .= $this->escapeHtml($store->getZipcode()).'<br>'; ?>
+                            <?php endif; ?>
+                            <!-- Phone -->
+                            <?php if($store->getPhone()): ?>
+                                <?php $fulladdress .= $this->escapeHtml($store->getPhone()).'<br>'; ?>
+                            <?php endif; ?>
+                            <?php echo $fulladdress; ?>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a href="<?php echo $this->getStoreUrl($store);?>" class="button" title="<?php echo Mage::helper('clarion_storelocator')->__('View Details') ?>" type="button">
+                                            <span>
+                                                <span>
+                                                <?php echo Mage::helper('clarion_storelocator')->__('View Details') ?>
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </td>
+
+                                    <td width="1px">&nbsp;</td>
+                                    <td>
+                                        <?php
+                                        //Get store google map related information
+                                        $storeName = $store->getName();
+                                        $storeLat = $store->getLatitude();
+                                        $storeLong = $store->getLongitude();
+                                        $storeRadius = $this->getRadius($store);
+                                        $storeZoomLevel = $this->getZoomLevel($store);
+                                        ?>
+                                        <?php if($storeLat && $storeLong): ?>
+                                            <a
+                                                href="#show-all-store"
+                                                onclick="initialize(<?php echo $storeLat ;?>, <?php echo $storeLong ;?>, <?php echo $storeRadius ;?>, <?php echo $storeZoomLevel ;?>, '<?php echo $storeName ;?>', 'store-list-map-canvas');"
+                                                class="button"
+                                                title="<?php echo Mage::helper('clarion_storelocator')->__('View Map') ?>"
+                                                type="button">
+                                                <span>
+                                                    <span>
+                                                        <?php echo Mage::helper('clarion_storelocator')->__('View Map') ?>
+                                                    </span>
+                                                </span>
+                                            </a>
+                                        <?php endif ;?>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <?php if ($i++ % 4 == 0) :?>
+                    <div class="clearfix visible-lg visible-md visible-sm"></div>
+                <?php endif; ?>
+                <?php
+                // for google map
+                $markers[$i]['name'] = '<b>'.$store->getName().'</b><br><p>'.$fulladdress.'</p>' ;
+                $markers[$i]['lat'] = $store->getLatitude();
+                $markers[$i]['long'] = $store->getLongitude();
+                ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+    </div>
+    <div>
+        <div align="right">&nbsp;</div>
+    </div>
+    <div>
+        <div align="right" colspan="3"><?php echo $this->getPager() ?></div>
+    </div>
+</div>
+</div>
+<?php if($totalStoreCount): ?>
+    <?php if(is_array($markers) && count($markers)>0 ) :?>
+        <script>
+            //<![CDATA[
+                var markers = [
+                    <?php foreach ($markers as $marker) : ?>
+                        ['<?php echo $marker['name'];?>',<?php echo $marker['lat'];?>,<?php echo $marker['long'];?>],
+                    <?php endforeach ?>
+                ];
+            //]]>
+        </script>
+    <?php endif ?>
+    <script type="text/javascript">
+        //<![CDATA[
+            var addressSearch = new VarienForm('addressSearch', true);
+        //]]>
+    </script>
+    <script>
+        //<![CDATA[
+            window.onload = function () {
+                google.maps.event.addDomListener(window, 'load', place_multiple_markers(markers, googleMapDivId));
+            }
+        //]]>
+    </script>
+<?php endif ?>
