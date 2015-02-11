@@ -4,7 +4,7 @@
  * 
  * @category    Clarion
  * @package     Clarion_Storelocator
- * @author      Clarion Magento Team <magento@clariontechnologies.co.in>
+ * @author      Clarion Magento Team
  * 
  */
 /**
@@ -17,20 +17,16 @@ $installer = $this;
  */
 $installer->startSetup();
 
-/**
- * Create table 'clarion_storelocator/storelocator'
- */
 $table = $installer->getConnection()
     ->newTable($installer->getTable('clarion_storelocator/storelocator'))
-    ->addColumn('storelocator_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'identity'  => true,
         'unsigned'  => true,
         'nullable'  => false,
         'primary'   => true,
-        ), 'Storelocator Id')
+        ), 'Store Id')
         
     ->addColumn('name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
-        'nullable'  => false,
         ), 'Store Name')
         
     ->addColumn('status', Varien_Db_Ddl_Table::TYPE_TINYINT, null, array(
@@ -72,16 +68,11 @@ $table = $installer->getConnection()
         'nullable'  => true,
         'default'   => null,
         ), 'Fax')
-
-    ->addColumn('url', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+   
+   ->addColumn('url', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable'  => true,
         'default'   => null,
-    ), 'Store Url')
-
-    ->addColumn('type', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
-        'nullable'  => true,
-        'default'   => null,
-    ), 'Store Type')
+        ), 'Store Url')
    
    ->addColumn('email', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable'  => true,
@@ -132,50 +123,10 @@ $table = $installer->getConnection()
        'nullable' => true,
        'default'  => null,
         ), 'Store Updated Date')
- 
-  //Add unique index for column 'name'
-  ->addIndex(
-        $installer->getIdxName(
-            'clarion_storelocator/storelocator', 
-            array('name'), 
-            Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE
-        ),
-        array('name'), 
-        array('type' => Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE))
         
     ->setComment('Clarion Storelocator Table');
 
 $installer->getConnection()->createTable($table);
-
-/**
- * Create table 'clarion_storelocator/storelocator_store'
- */
-
-$table = $installer->getConnection()
-    ->newTable($installer->getTable('clarion_storelocator/storelocator_store'))
-    ->addColumn('storelocator_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'nullable'  => false,
-        'primary'   => true,
-        ), 'Storelocator ID')
-    ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'unsigned'  => true,
-        'nullable'  => false,
-        'primary'   => true,
-        ), 'Store ID')
-    ->addIndex($installer->getIdxName('clarion_storelocator/storelocator_store', array('store_id')),
-        array('store_id'))
-        
-    ->addForeignKey($installer->getFkName('clarion_storelocator/storelocator_store', 'storelocator_id', 'clarion_storelocator/storelocator', 'storelocator_id'),
-        'storelocator_id', $installer->getTable('clarion_storelocator/storelocator'), 'storelocator_id',
-        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-        
-    ->addForeignKey($installer->getFkName('clarion_storelocator/storelocator_store', 'store_id', 'core/store', 'store_id'),
-        'store_id', $installer->getTable('core/store'), 'store_id',
-        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-        
-    ->setComment('Clarion Storelocator To Store Linkage Table');
-$installer->getConnection()->createTable($table);
-
 /**
  * Prepare database after install
  */

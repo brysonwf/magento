@@ -30,7 +30,6 @@ $table = $installer->getConnection()
         ), 'Storelocator Id')
         
     ->addColumn('name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
-        'nullable'  => false,
         ), 'Store Name')
         
     ->addColumn('status', Varien_Db_Ddl_Table::TYPE_TINYINT, null, array(
@@ -72,16 +71,11 @@ $table = $installer->getConnection()
         'nullable'  => true,
         'default'   => null,
         ), 'Fax')
-
-    ->addColumn('url', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+   
+   ->addColumn('url', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable'  => true,
         'default'   => null,
-    ), 'Store Url')
-
-    ->addColumn('type', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
-        'nullable'  => true,
-        'default'   => null,
-    ), 'Store Type')
+        ), 'Store Url')
    
    ->addColumn('email', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable'  => true,
@@ -132,16 +126,6 @@ $table = $installer->getConnection()
        'nullable' => true,
        'default'  => null,
         ), 'Store Updated Date')
- 
-  //Add unique index for column 'name'
-  ->addIndex(
-        $installer->getIdxName(
-            'clarion_storelocator/storelocator', 
-            array('name'), 
-            Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE
-        ),
-        array('name'), 
-        array('type' => Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE))
         
     ->setComment('Clarion Storelocator Table');
 
