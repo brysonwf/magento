@@ -102,14 +102,20 @@ class Clarion_Storelocator_Block_Adminhtml_Storelocator_Edit_Tab_Form extends Ma
         $fieldset->addField('fax', 'text', array(
           'label'     => Mage::helper('clarion_storelocator')->__('Fax'),
           'name'      => 'fax',
-        ));        
-        
-        $fieldset->addField('url', 'text', array(
-          'label'     => Mage::helper('clarion_storelocator')->__('Store Url'),
-          'class'     => 'validate-clean-url',
-          'name'      => 'url',
         ));
-        
+
+        $fieldset->addField('url', 'text', array(
+            'label'     => Mage::helper('clarion_storelocator')->__('Store Url'),
+            'class'     => 'validate-clean-url',
+            'name'      => 'url',
+        ));
+
+        $fieldset->addField('type', 'select', array(
+            'label'     => Mage::helper('clarion_storelocator')->__('Store Type'),
+            'name'      => 'type',
+            'values'    => ["Retailer" => 'Retailer', "Showroom" => 'Showroom', "Designer" => 'Designer'],
+        ));
+
         $fieldset->addField('email', 'text', array(
           'label'     => Mage::helper('clarion_storelocator')->__('Email'),
           'class'     => 'validate-email',
