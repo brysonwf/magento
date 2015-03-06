@@ -14,8 +14,7 @@
 
     <cms_index_index>
         <reference name="content">
-            <block type="revslideshow/view" name="flexslider.home" as="flexslider-home" before="-" template="revslideshow/default.phtml"/>
-            <block type="catalog/product_featured" name="catalog.product.featured" as="catalog-product-featured" after="flexslider.home" template="catalog/product/featured.phtml"/>
+            <block type="revslideshow/view" name="slideshow.home" as="slideshow-home" before="-" template="revslideshow/default.phtml"/>
         </reference>
     </cms_index_index>
 </layout>
