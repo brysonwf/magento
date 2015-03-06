@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ * @category    design
+ * @package     wot
+ * @copyright   Copyright (c) 2014 wideopentech
+ */
+-->
+<layout version="0.1.0">
+    <!--
+    Default layout, loads most of the pages
+    -->
+
+    <cms_index_index>
+        <reference name="content">
+            <block type="revslideshow/view" name="flexslider.home" as="flexslider-home" before="-" template="revslideshow/default.phtml"/>
+            <block type="catalog/product_featured" name="catalog.product.featured" as="catalog-product-featured" after="flexslider.home" template="catalog/product/featured.phtml"/>
+        </reference>
+    </cms_index_index>
+</layout>

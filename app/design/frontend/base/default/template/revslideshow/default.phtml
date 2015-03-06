@@ -1,0 +1,32 @@
+<?php
+$storeId = Mage::app()->getStore()->getId();
+$status = Mage::getStoreConfig('revslideshow/general/enabled', $storeId);
+$data = $this->getSlideshows();
+?>
+<?php if($status):?>
+
+<div class="loading-graphic home-loader">
+    <i class="fa fa-spin fa-cog fa-5x"></i>
+</div>
+<div class="flexslider flexslider-home loading">
+        <ul class="slides">
+            <?php foreach ($data as $item): ?>
+                <?php $image_url = $item->getData('cdn_image_url'); ?>
+                <?php $slide_url = $item->getData('slide_url'); ?>
+
+                <?php if ($image_url == null){ $image_url = '/media/revslideshow/'.$item->getData('image'); } ?>
+
+                <li class="slide">
+                    <div class="slide-content-container">
+                        <?php if ($item->getData('image') != ''): ?>
+                            <img src="<?php echo $image_url; ?>" alt="<?php echo $item->getData('title'); ?>" >
+                        <?php else: ?>
+                            <?php echo $item->getData('slide_content'); ?>
+                        <?php endif; ?>
+                        <a class="btn btn-blue btn-banner-learn-more pull-right" href="<?php echo $slide_url; ?>">Learn More <i class="fa fa-caret-right"></i></a>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif;?>
