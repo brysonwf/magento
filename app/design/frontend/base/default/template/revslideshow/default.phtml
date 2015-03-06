@@ -30,3 +30,10 @@ $data = $this->getSlideshows();
         </ul>
     </div>
 <?php endif;?>
+
+<!-- Place in the <head>, after the three links -->
+<script type="text/javascript" charset="utf-8">
+    jQuery(window).load(function() {
+        jQuery('.flexslider').flexslider();
+    });
+</script>

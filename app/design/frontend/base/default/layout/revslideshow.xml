@@ -1,9 +1,28 @@
 <?xml version="1.0"?>
 <layout>
+
+	<revslideshow_default>
+		<reference name="head">
+
+			<action method="addItem"><type>skin_js</type><name>js/jquery-1.11.2.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>js/jquery.flexslider.js</name></action>
+			<action method="addCss"><stylesheet>css/flexslider.css</stylesheet></action>
+
+			<!-- vendor javascript -->
+			<block type="core/text" name="jquery.noconflict">
+				<action method="setText">
+					<text><![CDATA[<script type="text/javascript">jQuery.noConflict();</script>]]></text>
+				</action>
+			</block>
+
+		</reference>
+	</revslideshow_default>
+
 	<cms_index_index>
 		<update handle="revslideshow_default" />
 		<reference name="content">
 			<block type="revslideshow/view" name="revslideshow.homepage" before="-"></block>
 		</reference>
 	</cms_index_index>
+
 </layout>
